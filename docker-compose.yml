@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:16.4
+    environment:
+      POSTGRES_PASSWORD: password
+    # Expose the port to the host machine, so you can use a local client to connect/inspect to the database
+    ports:
+      - "54320:5432"
+  pg_proxy:
+    image: ghcr.io/neondatabase/wsproxy:latest
+    environment:
+      APPEND_PORT: "postgres:5432"
+      ALLOW_ADDR_REGEX: ".*"
+      LOG_TRAFFIC: "true"
+    ports:
+      - "54330:80"
+    depends_on:
+      - postgres
